@@ -6,7 +6,15 @@ const Header = (props) => (<h1>{props.text}</h1>)
 
 const Button = (props) => (<button onClick={props.handleClick}>{props.text}</button>)
 
-const Statistic = (props) => (<p>{props.text} {props.value}</p>)
+const Statistic = (props) => {
+    return (
+        <tr>
+            <td>{props.text}</td>
+            <td>{props.value}</td>
+        </tr>
+
+    )
+}
 
 const Statistics = (props) => {
     const all = props.values.reduce((acc, value) => acc + value)
@@ -15,12 +23,16 @@ const Statistics = (props) => {
 
     return (
         <div>
-            <Statistic text="good" value={props.values[0]} />
-            <Statistic text="neutral" value={props.values[1]} />
-            <Statistic text="bad" value={props.values[2]} />
-            <Statistic text="all" value={all} />
-            <Statistic text="average" value={average} />
-            <Statistic text="positive" value={positive} />
+            <table>
+                <tbody>
+                    <Statistic text="good" value={props.values[0]} />
+                    <Statistic text="neutral" value={props.values[1]} />
+                    <Statistic text="bad" value={props.values[2]} />
+                    <Statistic text="all" value={all} />
+                    <Statistic text="average" value={average} />
+                    <Statistic text="positive" value={positive} />
+                </tbody>
+            </table>
         </div>
     )
 
@@ -42,9 +54,9 @@ const App = () => {
     return (
         <div>
             <Header text="give feedback" />
-            <Button handleClick={() => {setGood(good + 1); setFeedbackGiven(true)}} text="good" />
-            <Button handleClick={() => {setNeutral(neutral + 1); setFeedbackGiven(true)}} text="neutral" />
-            <Button handleClick={() => {setBad(bad + 1); setFeedbackGiven(true)}} text="bad" />
+            <Button handleClick={() => { setGood(good + 1); setFeedbackGiven(true) }} text="good" />
+            <Button handleClick={() => { setNeutral(neutral + 1); setFeedbackGiven(true) }} text="neutral" />
+            <Button handleClick={() => { setBad(bad + 1); setFeedbackGiven(true) }} text="bad" />
             <Header text="statistics" />
             {stats}
         </div>

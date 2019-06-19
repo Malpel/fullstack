@@ -1,7 +1,6 @@
 import React from 'react'
 
 
-
 const Content = ({ course }) => {
     return (
         <div>

@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 
 
 const Filter = ({ filterNames }) => {
@@ -38,37 +39,22 @@ const Numbers = ({ persons }) => {
 }
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    {
-      name: 'Arto Hellas',
-      number: '040-1234567'
-    },
-
-    {
-      name: 'Ada Lovelace',
-      number: '39-44-5323523'
-    },
-
-    {
-      name: 'Tommy Shelby',
-      number: '77-323-57342'
-    },
-
-    {
-      name: 'Dan Abramov',
-      number: '12-43-234345'
-    },
-
-    {
-      name: 'Mary Poppendieck',
-      number: '39-23-6423122'
-    }
-  ])
-
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
-  const [filter, setFilter] = useState('')
   const [filteredNames, setFilteredNames] = useState(persons)
+
+
+  useEffect(() => {
+    axios
+    .get('http://localhost:3001/persons')
+    .then(res => {
+      setPersons(res.data)
+      setFilteredNames(res.data)
+    })
+  }, [])
+  console.log('render', persons.length, 'notes')
+
 
   const addName = (event) => {
     event.preventDefault()
@@ -82,8 +68,6 @@ const App = () => {
       setNewNumber('')
       setFilter('')
     }
-
-
   }
 
   const handleNameChange = (event) => {
@@ -94,16 +78,13 @@ const App = () => {
     setNewNumber(event.target.value)
   }
 
-  const filterChange = (filterWord) => {
-    setFilter(filterWord)
-    console.log(`filter currently: ${filter}`)
+  const filterChange = (filter) => {
     setFilteredNames(persons.filter(person => person.name.toUpperCase()
-      .indexOf(filterWord.toUpperCase()) > -1))
+      .indexOf(filter.toUpperCase()) > -1))
   }
 
   const filterNames = (event) => {
     filterChange(event.target.value)
-    console.log(event.target.value)
   }
 
   return (

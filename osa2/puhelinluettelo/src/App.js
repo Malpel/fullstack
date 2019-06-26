@@ -1,101 +1,101 @@
 import React, { useState, useEffect } from 'react'
-import personService from './services/persons'
+import contactService from './services/contacts'
+import Contacts from './components/Contacts'
+import ContactForm from './components/ContactForm'
+import Filter from './components/Filter'
+import Notification from './components/Notification'
 
-
-const Button = ({ handleDelete }) => {
-  return (
-    <button onClick={handleDelete}>Delete</button>
-  )
-}
-
-const Filter = ({ filterNames }) => {
-  return (
-    <div>
-      filter people: <input onChange={filterNames} />
-    </div>
-  )
-}
-
-const PersonForm = (props) => {
-  return (
-    <div>
-      <form onSubmit={props.addName}>
-        <div>
-          name: <input value={props.newName} onChange={props.handleNameChange} />
-        </div>
-        <div>
-          number: <input value={props.newNumber} onChange={props.handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-    </div>
-
-  )
-}
-const Numbers = ({ persons, handleDelete }) => {
-  return (
-    <div>
-      {persons.map((person) => {
-        return (
-          <p key={person.name}>{person.name} {person.number}  <Button
-            handleDelete={() => handleDelete(person.id, person.name)} />
-          </p>
-        )
-      })}
-    </div>
-  )
-}
 
 const App = () => {
-  const [persons, setPersons] = useState([])
+  const [contacts, setContacts] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
-  const [filteredNames, setFilteredNames] = useState(persons)
+  const [filteredContacts, setFilteredContacts] = useState(contacts)
+  const [message, setMessage] = useState(null)
+  const [messageType, setMessageType] = useState()
 
+  const getAllContacts = () => {
+    contactService
+      .getAll()
+      .then(initialContacts => {
+        setContacts(initialContacts)
+        setFilteredContacts(initialContacts)
+        setNewName('')
+        setNewNumber('')
+      }).catch(error => {
+        setMessageType('error')
+        setMessage('Error: couldn\'t retrieve phonenbook', error)
+      })
+  }
+
+  const notify = (type, action, name) => {
+    if (type === 'success') {
+      setMessageType('success')
+      switch (action) {
+        case 'add':
+          setMessage(`Added ${name}`)
+          break;
+        case 'update':
+          setMessage(`Updated ${name}'s number`)
+          break;
+        case 'delete':
+          setMessage(`Deleted ${name}`)
+          break;
+        default:
+      }
+    } else {
+      setMessageType('error')
+      setMessage(`Error: ${name} has already been deleted from server`)
+    }
+    setTimeout(() => {
+      setMessage(null)
+      setMessageType(null)
+    }, 5000)
+  }
 
   useEffect(() => {
-    personService
-      .getAll()
-      .then(initialPersons => {
-        setPersons(initialPersons)
-        setFilteredNames(initialPersons)
-      })
+    getAllContacts()
   }, [])
-
-  console.log('render', persons.length, 'notes')
 
   const addName = (event) => {
     event.preventDefault()
-    const lastId = persons[persons.length - 1].id
-    const person = persons.find(person => person.name === newName)
-    if (person !== undefined) {
+    const lastId = contacts[contacts.length - 1].id
+    const contact = contacts.find(contact => contact.name === newName)
+
+
+    if (contact !== undefined) {
+      // update
       if (window.confirm(`Contact ${newName} exists already,
        replace the old number with a new one?`)) {
-        personService
-          .update(person.id, { name: newName, number: newNumber, id: person.id })
+        contactService
+          .update(contact.id, { name: newName, number: newNumber, id: contact.id })
           .then(() => {
-            personService
-              .getAll()
-              .then(initialPersons => {
-                setPersons(initialPersons)
-                setFilteredNames(initialPersons)
-                setNewName('')
-                setNewNumber('')
-              })
+            getAllContacts()
+            setNewName('')
+            setNewNumber('')
+            notify('success', 'update', newName)
+          })
+          .catch(error => {
+            notify('error', 'update', newName)
+            getAllContacts()
           })
       }
-
     } else {
-      personService
+      // add new
+      contactService
         .create({ name: newName, number: newNumber, id: lastId + 1 })
-        .then(returnedPersons => {
-          const arr = persons.concat(returnedPersons)
-          setPersons(arr)
-          setFilteredNames(arr)
+        .then(returnedContact => {
+          const arr = contacts.concat(returnedContact)
+          setContacts(arr)
+          setFilteredContacts(arr)
           setNewName('')
           setNewNumber('')
+          notify('success', 'add', newName)
+        })
+        .catch(error => {
+          console.log('error')
+          notify('error', 'add', newName)
+          getAllContacts()
         })
     }
   }
@@ -109,26 +109,31 @@ const App = () => {
   }
 
   const filterChange = (filter) => {
-    setFilteredNames(persons.filter(person => person.name.toUpperCase()
+    setFilteredContacts(contacts.filter(contact => contact.name.toUpperCase()
       .indexOf(filter.toUpperCase()) > -1))
   }
 
-  const filterNames = (event) => {
+  const filterContacts = (event) => {
     filterChange(event.target.value)
   }
 
   const handleDelete = (id, name) => {
     if (window.confirm(`Delete ${name}?`)) {
-      personService
+      contactService
         .remove(id)
         .then(() => {
-          personService
+          contactService
             .getAll()
-            .then(persons => {
-              const arr = persons
-              setPersons(arr)
-              setFilteredNames(arr)
+            .then(contacts => {
+              const arr = contacts
+              setContacts(arr)
+              setFilteredContacts(arr)
             })
+        })
+        .catch(error => {
+          console.log(error)
+          notify('error', 'delete', name)
+          getAllContacts()
         })
     }
   }
@@ -136,19 +141,19 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <Filter filterNames={filterNames} />
+      <Notification message={message} type={messageType} />
+      <Filter filterContacts={filterContacts} />
       <h2>Add a new contact</h2>
-      <PersonForm
+      <ContactForm
         addName={addName}
         newName={newName}
         newNumber={newNumber}
         handleNameChange={handleNameChange}
         handleNumberChange={handleNumberChange} />
-      <h2>Numbers</h2>
-      <Numbers persons={filteredNames} handleDelete={handleDelete} />
+      <h2>Contacts</h2>
+      <Contacts contacts={filteredContacts} handleDelete={handleDelete} />
     </div>
   )
-
 }
 
 export default App

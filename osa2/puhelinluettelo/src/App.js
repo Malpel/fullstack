@@ -93,7 +93,6 @@ const App = () => {
           notify('success', 'add', newName)
         })
         .catch(error => {
-          console.log('error')
           notify('error', 'add', newName)
           getAllContacts()
         })
@@ -131,7 +130,6 @@ const App = () => {
             })
         })
         .catch(error => {
-          console.log(error)
           notify('error', 'delete', name)
           getAllContacts()
         })

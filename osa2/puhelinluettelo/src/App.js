@@ -127,6 +127,7 @@ const App = () => {
               const arr = contacts
               setContacts(arr)
               setFilteredContacts(arr)
+              notify('success', 'delete', name)
             })
         })
         .catch(error => {

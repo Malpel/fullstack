@@ -1,7 +1,6 @@
 # Fullstack 2019
 
-## Osa 1 - Kurssitiedot (1.1 - 1.5)
-
+## Osa 2 - Kurssitiedot (2.1 - 2.5)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

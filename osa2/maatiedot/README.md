@@ -1,6 +1,6 @@
 # Fullstack 2019
 
-## Osa 2 - Maiden tiedot 2.12* - 2.14*
+## Osa 2: Maiden tiedot (2.12* - 2.14*)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

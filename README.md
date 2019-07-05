@@ -11,3 +11,6 @@
 * [Kurssitiedot 1.6 - 2.5](https://github.com/Malpel/fullstack/tree/master/osa2/kurssitiedot)
 * [Puhelinluettelo 2.6 - 2.11, 2.15 - 2.20*](https://github.com/Malpel/fullstack/tree/master/osa2/puhelinluettelo)
 * [Maiden tiedot 2.12* - 2.14*](https://github.com/Malpel/fullstack/tree/master/osa2/maatiedot)
+
+## Osa 3: [Palvelimen ohjelmointi NodeJS:n Express-kirjastolla](https://github.com/Malpel/fullstack-osa3)
+* Sovellus [Herokussa](https://radiant-ocean-57566.herokuapp.com/)

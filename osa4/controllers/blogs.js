@@ -4,7 +4,7 @@ const Blog = require('../models/blog')
 blogsRouter.get('/', async (req, res, next) => {
     try {
         const blogs = await Blog.find({})
-        res.json(blogs)
+        res.json(blogs.map(blog => blog.toJSON()))
         console.log('GET successful')
     }
     catch (exception) {
@@ -12,14 +12,15 @@ blogsRouter.get('/', async (req, res, next) => {
     }
 })
 
-blogsRouter.post('/', (req, res, next) => {
-    const blog = new Blog(req.body)
-
-    blog.save()
-        .then(result => {
-            res.status(201).json(result)
-        })
-        .catch(error => next(error))
+blogsRouter.post('/', async (req, res, next) => {
+    try {
+        const blog = new Blog(req.body)
+        const savedBlog = await blog.save(blog)
+        res.status(201).json(savedBlog.toJSON())
+    }
+    catch (exception) {
+        next(exception)
+    }
 })
 
 module.exports = blogsRouter

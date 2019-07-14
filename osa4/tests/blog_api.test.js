@@ -69,6 +69,43 @@ test('blogs with missing required fields cannot be added', async () => {
     expect(allBlogs.length).toBe(helper.initialBlogs.length)
 })
 
+test('blogs can be deleted', async () => {
+    const blogsAtStart = await helper.getAllBlogs()
+    const blogToDelete = blogsAtStart[0]
+
+    await api
+        .delete(`/api/blogs/${blogToDelete.id}`)
+        .expect(204)
+
+    const blogsAtEnd = await helper.getAllBlogs()
+    expect(blogsAtEnd.length).toBe(blogsAtStart.length - 1)
+
+    const contents = blogsAtEnd.map(r => r.title)
+    expect(contents).not.toContain(blogToDelete.title)
+})
+
+test('blog\'s likes can be updated', async () => {
+    const blogsAtStart = await helper.getAllBlogs()
+    const blogToUpdate = blogsAtStart[0]
+    const originalLikes = blogToUpdate.likes
+
+    const updatedBlog = {
+        title: blogToUpdate.title,
+        author: blogToUpdate.author,
+        url: blogToUpdate.url,
+        likes: (blogToUpdate.likes + 1)
+    }
+
+    await api
+        .put(`/api/blogs/${blogToUpdate.id}`)
+        .send(updatedBlog)
+        .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.getAllBlogs()
+    expect(blogsAtEnd[0].likes).toBe(originalLikes + 1)
+
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })

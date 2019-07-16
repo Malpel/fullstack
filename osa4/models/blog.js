@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const uniqueValidator = require('mongoose-unique-validator')
+
 mongoose.set('useFindAndModify', false)
 mongoose.set('useCreateIndex', true)
 
@@ -19,8 +21,15 @@ const blogSchema = new mongoose.Schema({
     likes: {
         type: Number,
         default: 0
+    },
+
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     }
 })
+
+blogSchema.plugin(uniqueValidator)
 
 blogSchema.set('toJSON', {
     transform: (document, returnedObject) => {

@@ -1,4 +1,5 @@
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const testBlog = {
     title: 'In the Mouth of Madness',
@@ -36,7 +37,7 @@ const initialBlogs = [
     {
         title: 'First class tests',
         author: 'Robert C. Martin',
-        url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
+        url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.html',
         likes: 10
     },
 
@@ -55,14 +56,71 @@ const initialBlogs = [
     }
 ]
 
-const getAllBlogs = async () => {
+const initialUsers = [
+    {
+        username: 'generic_username',
+        name: 'John Smith',
+        password: 'password123'
+    },
+
+    {
+        username: 'M_Nem',
+        name: 'Maydup Nem',
+        password: 'good_password'
+    },
+
+    {
+        username: 'tester',
+        name: 'Test Testerson',
+        password: 'testpassword'
+    }
+
+]
+
+const usernameTooShort = {
+    username: '2s',
+    name: 'Hugh Kers',
+    password: 'secretwords'
+}
+
+const passwordTooShort = {
+    username: 'long_enough',
+    name: 'Hugh Kers',
+    password: 's'
+}
+
+const userMissingFields = {
+    username: '',
+    name: 'Hugh Kers',
+    password: ''
+}
+
+const validUser = {
+    username: 'long_enough',
+    name: 'Hugh Kers',
+    password: 'secretwords'
+}
+
+
+const blogsInDb = async () => {
     const blogs = await Blog.find({})
     return blogs.map(blog => blog.toJSON())
+}
+
+const usersInDb = async () => {
+    const users = await User.find({})
+    return users.map(user => user.toJSON())
 }
 
 module.exports = {
     testBlog,
     faultyBlog,
     initialBlogs,
-    getAllBlogs
+    blogsInDb,
+    initialUsers,
+    usernameTooShort,
+    passwordTooShort,
+    userMissingFields,
+    validUser,
+    usersInDb
 }

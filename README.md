@@ -14,3 +14,6 @@
 
 ## Osa 3: [Palvelimen ohjelmointi NodeJS:n Express-kirjastolla](https://github.com/Malpel/fullstack-osa3)
 * Sovellus [Herokussa](https://radiant-ocean-57566.herokuapp.com/)
+
+## Osa 4: [Express-sovellusten testaaminen, käyttäjänhallinta](https://github.com/Malpel/tree/master/osa4)
+* Blogilista 4.1 - 4.21*

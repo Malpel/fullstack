@@ -6,14 +6,41 @@ const api = supertest(app)
 const Blog = require('../models/blog')
 const User = require('../models/user')
 
+
+//the below is used for authorization purposes
+let token = 'asd'
+
+const rootUser = {
+    username: 'root',
+    password: 'root'
+}
+
+beforeAll(async () => {
+    await api.post('/api/users')
+        .send(rootUser)
+    const result = await api.post('/api/login')
+        .send(rootUser)
+    token = result.body.token
+})
+
 describe('when blogs initially exist in database', () => {
     beforeEach(async () => {
         await Blog.deleteMany({})
-
         const blogObjects = helper.initialBlogs
             .map(blog => new Blog(blog))
         const promiseArray = blogObjects.map(blog => blog.save())
         await Promise.all(promiseArray)
+
+        // needed to test deletion
+        // some of the length comparisons will seem a bit odd because of this
+        await api.post('/api/blogs')
+            .set('Authorization', `Bearer ${token}`)
+            .send({
+                title: 'superuser\'s test',
+                author: 'root',
+                url: '/',
+                likes: 1
+            })
     })
 
     test('blogs are returned as json', async () => {
@@ -31,18 +58,19 @@ describe('when blogs initially exist in database', () => {
 
     test('all blogs are returned', async () => {
         const res = await api.get('/api/blogs')
-        expect(res.body.length).toBe(helper.initialBlogs.length)
+        expect(res.body.length).toBe(helper.initialBlogs.length + 1)
     })
 
     test('a valid blog can be added', async () => {
         await api
             .post('/api/blogs')
+            .set('Authorization', `Bearer ${token}`)
             .send(helper.testBlog)
             .expect(201)
             .expect('Content-Type', /application\/json/)
 
         const blogsAtEnd = await helper.blogsInDb()
-        expect(blogsAtEnd.length).toBe(helper.initialBlogs.length + 1)
+        expect(blogsAtEnd.length).toBe(helper.initialBlogs.length + 2)
 
         const contents = blogsAtEnd.map(blog => blog.title)
         expect(contents).toContain('In the Mouth of Madness')
@@ -52,6 +80,7 @@ describe('when blogs initially exist in database', () => {
     test('unset likes default to zero', async () => {
         await api
             .post('/api/blogs')
+            .set('Authorization', `Bearer ${token}`)
             .send(helper.testBlog)
             .expect(201)
             .expect('Content-Type', /application\/json/)
@@ -64,19 +93,21 @@ describe('when blogs initially exist in database', () => {
     test('blogs with missing required fields cannot be added', async () => {
         await api
             .post('/api/blogs')
+            .set('Authorization', `Bearer ${token}`)
             .send(helper.faultyBlog)
             .expect(400)
 
         const allBlogs = await helper.blogsInDb()
-        expect(allBlogs.length).toBe(helper.initialBlogs.length)
+        expect(allBlogs.length).toBe(helper.initialBlogs.length + 1)
     })
 
     test('blogs can be deleted', async () => {
         const blogsAtStart = await helper.blogsInDb()
-        const blogToDelete = blogsAtStart[0]
-
+        const blogToDelete = blogsAtStart[blogsAtStart.length - 1]
+        console.log(blogToDelete)
         await api
             .delete(`/api/blogs/${blogToDelete.id}`)
+            .set('Authorization', `Bearer ${token}`)
             .expect(204)
 
         const blogsAtEnd = await helper.blogsInDb()
@@ -153,8 +184,7 @@ describe('user creation (with initial users)', () => {
 
     test('fails with proper statuscode if missing username', async () => {
         const usersAtStart = await helper.usersInDb()
-        const newUser = helper.userMissingFields
-        newUser.password = 'atleast3'
+        const newUser = helper.missingUsername
 
         const result = await api
             .post('/api/users')
@@ -171,8 +201,7 @@ describe('user creation (with initial users)', () => {
 
     test('fails with proper statuscode if missing password', async () => {
         const usersAtStart = await helper.usersInDb()
-        const newUser = helper.userMissingFields
-        newUser.username = 'atleast3'
+        const newUser = helper.missingPassword
 
         const result = await api
             .post('/api/users')

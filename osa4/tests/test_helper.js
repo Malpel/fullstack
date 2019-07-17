@@ -77,6 +77,7 @@ const initialUsers = [
 
 ]
 
+// because npm run test runs tests with --inBand, these are all needed
 const usernameTooShort = {
     username: '2s',
     name: 'Hugh Kers',
@@ -89,10 +90,14 @@ const passwordTooShort = {
     password: 's'
 }
 
-const userMissingFields = {
-    username: '',
+const missingPassword = {
+    username: 'long_enough',
+    name: 'Hugh Kers'
+}
+
+const missingUsername = {
     name: 'Hugh Kers',
-    password: ''
+    password: 'seccretwords'
 }
 
 const validUser = {
@@ -120,7 +125,8 @@ module.exports = {
     initialUsers,
     usernameTooShort,
     passwordTooShort,
-    userMissingFields,
+    missingPassword,
+    missingUsername,
     validUser,
     usersInDb
 }

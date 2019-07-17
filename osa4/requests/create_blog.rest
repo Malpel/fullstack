@@ -1,10 +1,9 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1fTmVtIiwiaWQiOiI1ZDJkOWI2OTIwYTc3YjViNjA1ZjIxYzAiLCJpYXQiOjE1NjMyODgzMjJ9.YQwkWpu1u8XDvAhpAHHBHDVuUcZd6kexOjR3NXnb5C0
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdlbmVyaWNfdXNlcm5hbWUiLCJpZCI6IjVkMmQ5YWQ0MjBhNzdiNWI2MDVmMjFiZiIsImlhdCI6MTU2MzM3MDUzM30.rzW8ASaQY6tNhhYqtDiBVoNBUUnT3mH6B63VYiOqPME
 
 {
-    "title": "Fullstack Development",
-    "author": "Matti Luukkainen",
-    "url": "https://fullstackopen.com/",
-    "likes": 50
+    "title": "Likes default to zero",
+    "author": "Test Author",
+    "url": "https://testurl.co.fi.com"
 }

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog, blogs, setBlogs, user }) => {
     const [allVisible, setAllVisible] = useState(false)
@@ -60,7 +61,7 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
 
         <div style={blogStyle}>
             {allVisible ?
-                <div >
+                <div className='fullBlog' >
                     <p onClick={() => setAllVisible(false)}>{blog.title} {blog.author}</p>
                     <br />
                     <a href={blog.url}>{blog.url}</a>
@@ -72,14 +73,18 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
                     {deleteButton()}
                 </div>
                 :
-                <div>
-                    <p onClick={() => setAllVisible(true)}>{blog.title} {blog.author}</p>
+                <div className='compactBlog'>
+                    <p className='title' onClick={() => setAllVisible(true)}>{blog.title} {blog.author}</p>
                 </div>}
-
-
-
         </div>
     )
+}
+
+Blog.propTypes = {
+    blog: PropTypes.object.isRequired,
+    blogs: PropTypes.array.isRequired,
+    setBlogs: PropTypes.func.isRequired,
+    user: PropTypes.string.isRequired
 }
 
 export default Blog

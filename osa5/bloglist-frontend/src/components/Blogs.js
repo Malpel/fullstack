@@ -1,5 +1,6 @@
 import React from 'react'
 import Blog from './Blog'
+import PropTypes from 'prop-types'
 
 const Blogs = ({ blogs, setBlogs, user }) => {
     if (blogs) {
@@ -13,7 +14,12 @@ const Blogs = ({ blogs, setBlogs, user }) => {
     return <div>
         nothing
     </div>
+}
 
+Blogs.propTypes = {
+    blogs: PropTypes.array,
+    setBlogs: PropTypes.func.isRequired,
+    user: PropTypes.string.isRequired
 }
 
 export default Blogs

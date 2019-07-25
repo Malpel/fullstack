@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const Notification = ({ notification }) => {
 
@@ -28,7 +29,10 @@ const Notification = ({ notification }) => {
     } else {
         return null
     }
+}
 
+Notification.propTypes = {
+    notification: PropTypes.func
 }
 
 export default Notification

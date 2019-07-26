@@ -15,7 +15,7 @@ function App() {
     const [blogFormVisible, setBlogFormVisible] = useState(false)
 
     useEffect(() => {
-        const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
+        const loggedUserJSON = window.localStorage.getItem('loggedBlogListUser')
 
         if (loggedUserJSON) {
             const user = JSON.parse(loggedUserJSON)
@@ -42,7 +42,7 @@ function App() {
             })
 
             window.localStorage.setItem(
-                'loggedBloglistUser', JSON.stringify(user)
+                'loggedBlogListUser', JSON.stringify(user)
             )
 
             blogService.setToken(user.token)
@@ -97,7 +97,7 @@ function App() {
     return (
         <div>
             {user ?
-                <div>
+                <div className='blogsList'>
                     <h2>blogs</h2>
                     <Notification notification={notification} />
                     <br />
@@ -110,7 +110,7 @@ function App() {
                 </div>
 
                 :
-                <div>
+                <div className='loginForm'>
                     <h2>Login</h2>
                     <Notification notification={notification} />
                     <br />

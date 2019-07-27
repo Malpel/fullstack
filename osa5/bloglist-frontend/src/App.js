@@ -5,14 +5,17 @@ import Blogs from './components/Blogs'
 import blogService from './services/blogs'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
+import { useField } from './hooks/index'
 
 function App() {
     const [user, setUser] = useState(null)
     const [blogs, setBlogs] = useState(null)
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
     const [notification, setNotification] = useState(null)
     const [blogFormVisible, setBlogFormVisible] = useState(false)
+    const username = useField('text')
+    const password = useField('password')
+    const { reset: resetUsername, ...inputUsername } = username
+    const { reset: resetPassword, ...inputPassword } = password
 
     useEffect(() => {
         const loggedUserJSON = window.localStorage.getItem('loggedBlogListUser')
@@ -38,7 +41,8 @@ function App() {
         event.preventDefault()
         try {
             const user = await loginService.login({
-                username, password
+                username: username.value,
+                password: password.value
             })
 
             window.localStorage.setItem(
@@ -47,8 +51,8 @@ function App() {
 
             blogService.setToken(user.token)
             setUser(user)
-            setUsername('')
-            setPassword('')
+            resetUsername()
+            resetPassword()
         }
 
         catch (exception) {
@@ -115,9 +119,7 @@ function App() {
                     <Notification notification={notification} />
                     <br />
                     <LoginForm handleLogin={handleLogin}
-                        username={username} handleUsernameChange={({ target }) => setUsername(target.value)}
-                        password={password} handlePasswordChange={({ target }) => setPassword(target.value)}
-                    />
+                        username={inputUsername} password={inputPassword} />
                 </div>
             }
         </div>

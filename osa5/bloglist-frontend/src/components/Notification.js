@@ -32,7 +32,7 @@ const Notification = ({ notification }) => {
 }
 
 Notification.propTypes = {
-    notification: PropTypes.func
+    notification: PropTypes.object
 }
 
 export default Notification

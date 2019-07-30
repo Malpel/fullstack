@@ -17,3 +17,7 @@
 
 ## Osa 4: [Express-sovellusten testaaminen, käyttäjänhallinta](https://github.com/Malpel/fullstack/tree/master/osa4)
 * Blogilista 4.1 - 4.21*
+
+## Osa 5: [React-sovelluksen testaaminen, custom hookit](https://github.com/Malpel/fullstack/tree/master/osa5)
+* [Blogilistan frontend 5.1 - 5.20](https://github.com/Malpel/fullstack/tree/master/osa5/bloglist-frontend)
+* [Ultimate Hooks 5.21*](https://github.com/Malpel/fullstack/tree/master/osa5/custom-hooks)

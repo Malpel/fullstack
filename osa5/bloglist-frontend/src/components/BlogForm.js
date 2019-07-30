@@ -8,10 +8,6 @@ const BlogForm = ({ setBlogs, blogs, setNotification, notify }) => {
     const author = useField('text')
     const url = useField('text')
 
-    const { reset: resetTitle, ...inputTitle } = title
-    const { reset: resetAuthor, ...inputAuthor } = author
-    const { reset: resetUrl, ...inputUrl } = url
-
     const addBlog = async (event) => {
         event.preventDefault()
         try {
@@ -27,9 +23,9 @@ const BlogForm = ({ setBlogs, blogs, setNotification, notify }) => {
                 type: 'success',
                 message: `a new blog ${savedBlog.title} by ${savedBlog.author} added`
             })
-            resetTitle()
-            resetAuthor()
-            resetUrl()
+            title.reset.resetValue()
+            author.reset.resetValue()
+            url.reset.resetValue()
             notify()
         }
         catch (exception) {
@@ -41,13 +37,13 @@ const BlogForm = ({ setBlogs, blogs, setNotification, notify }) => {
         <div>
             <form onSubmit={addBlog}>
                 <div>
-                    title: <input {...inputTitle} />
+                    title: <input {...title} />
                 </div>
                 <div>
-                    author: <input {...inputAuthor} />
+                    author: <input {...author} />
                 </div>
                 <div>
-                    url: <input {...inputUrl} />
+                    url: <input {...url} />
                 </div>
                 <button type='submit'>create</button>
             </form>

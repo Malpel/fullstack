@@ -58,7 +58,6 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
     }
 
     return (
-
         <div style={blogStyle}>
             {allVisible ?
                 <div className='fullBlog' >

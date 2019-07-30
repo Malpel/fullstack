@@ -14,8 +14,6 @@ function App() {
     const [blogFormVisible, setBlogFormVisible] = useState(false)
     const username = useField('text')
     const password = useField('password')
-    const { reset: resetUsername, ...inputUsername } = username
-    const { reset: resetPassword, ...inputPassword } = password
 
     useEffect(() => {
         const loggedUserJSON = window.localStorage.getItem('loggedBlogListUser')
@@ -51,8 +49,8 @@ function App() {
 
             blogService.setToken(user.token)
             setUser(user)
-            resetUsername()
-            resetPassword()
+            username.reset.resetValue()
+            password.reset.resetValue()
         }
 
         catch (exception) {
@@ -119,7 +117,7 @@ function App() {
                     <Notification notification={notification} />
                     <br />
                     <LoginForm handleLogin={handleLogin}
-                        username={inputUsername} password={inputPassword} />
+                        username={username} password={password} />
                 </div>
             }
         </div>

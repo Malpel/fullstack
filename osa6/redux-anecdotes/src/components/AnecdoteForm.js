@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { showCreateNotification, hideNotification } from '../reducers/notificationReducer'
 
 const AnecdoteForm = ({ store }) => {
     const [newAnecdote, setNewAnecdote] = useState('')
@@ -10,10 +11,13 @@ const AnecdoteForm = ({ store }) => {
     const create = (event) => {
         event.preventDefault()
         console.log('create new')
-        store.dispatch({
+        store.dispatch(showCreateNotification({
             type: 'CREATE',
             data: newAnecdote
-        })
+        }))
+        setTimeout(() => {
+            store.dispatch(hideNotification())
+        }, 5000)
         setNewAnecdote('')
     }
 

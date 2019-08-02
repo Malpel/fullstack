@@ -25,7 +25,7 @@ const reducer = (state = initialState, action) => {
 
     switch (action.type) {
         case 'VOTE':
-            const id = action.data
+            const id = action.data.id
             const anecdoteToVote = state.find(a => a.id === id)
             const votedAnecdote = {
                 ...anecdoteToVote,

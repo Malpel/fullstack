@@ -1,16 +1,22 @@
 import React from 'react'
+import { showVoteNotification, hideNotification } from '../reducers/notificationReducer'
 
 const AnecdoteList = ({ store }) => {
-    const anecdotes = store.getState()
+    const anecdotes = store.getState().anecdotes
         .sort((a, b) => b.votes - a.votes)
 
-
-    const vote = (id) => {
-        console.log('vote', id)
-        store.dispatch({
-            type: 'VOTE',
-            data: id
-        })
+    const vote = (id, content) => {
+        console.log('vote', id, content)
+        //store.dispatch()
+        store.dispatch(showVoteNotification({
+            data: {
+                id: id,
+                content: content
+            }
+        }))
+        setTimeout(() => {
+            store.dispatch(hideNotification())
+        }, 5000)
     }
 
     return (
@@ -22,7 +28,7 @@ const AnecdoteList = ({ store }) => {
                     </div>
                     <div>
                         has {anecdote.votes}
-                        <button onClick={() => vote(anecdote.id)}>vote</button>
+                        <button onClick={() => vote(anecdote.id, anecdote.content)}>vote</button>
                     </div>
                 </div>
             )}

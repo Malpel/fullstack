@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
+import { connect } from 'react-redux'
 import { showCreateNotification, hideNotification } from '../reducers/notificationReducer'
 
-const AnecdoteForm = ({ store }) => {
+const AnecdoteForm = (props) => {
     const [newAnecdote, setNewAnecdote] = useState('')
 
     const handleAnecdoteChange = (event) => {
@@ -11,12 +12,12 @@ const AnecdoteForm = ({ store }) => {
     const create = (event) => {
         event.preventDefault()
         console.log('create new')
-        store.dispatch(showCreateNotification({
+        props.showCreateNotification({
             type: 'CREATE',
             data: newAnecdote
-        }))
+        })
         setTimeout(() => {
-            store.dispatch(hideNotification())
+            props.hideNotification()
         }, 5000)
         setNewAnecdote('')
     }
@@ -34,5 +35,21 @@ const AnecdoteForm = ({ store }) => {
     )
 }
 
-export default AnecdoteForm
+const mapStateToProps = (state) => {
+    return {
+        anecdotes: state.anecdotes
+    }
+}
+
+const mapDispatchToProps = {
+    showCreateNotification,
+    hideNotification
+}
+
+const ConnectedAnecdoteForm = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(AnecdoteForm)
+
+export default ConnectedAnecdoteForm
 

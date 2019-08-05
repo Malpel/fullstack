@@ -23,5 +23,5 @@
 * [Ultimate Hooks 5.21*](https://github.com/Malpel/fullstack/tree/master/osa5/custom-hooks)
 
 ## Osa 6: [Sovelluksen tilan hallinta Redux-kirjastolla](https://github.com/Malpel/fullstack/tree/master/osa6)
-* [unicafe-redux 6.1 - 6.2](https:/github.com/Malpel/fullstack/tree/master/osa6/unicafe-redux)
+* [unicafe-redux 6.1 - 6.2](https://github.com/Malpel/fullstack/tree/master/osa6/unicafe-redux)
 * [redux-anecdotes 6.3 - 6.21](https://github.com/Malpel/fullstack/tree/master/osa6/redux-anecdotes)

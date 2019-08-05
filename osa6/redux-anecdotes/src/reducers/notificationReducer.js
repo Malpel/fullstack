@@ -1,12 +1,9 @@
-
 const initialState = null
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case 'VOTE':
-            return `you voted '${action.data.content}'`
-        case 'CREATE':
-            return `created '${action.data}'`
+        case 'NOTIFY':
+            return action.message
         case 'HIDE_NOTIFICATION':
             return null
         default:
@@ -14,17 +11,26 @@ const reducer = (state = initialState, action) => {
     }
 }
 
-export const showCreateNotification = stuff => {
-    return {
-        type: 'CREATE',
-        data: stuff.data
+let timeout = null
+
+const delayDispatch = (dispatch, seconds) => {
+    timeout = setTimeout(() => {
+        dispatch(hideNotification())
+    }, seconds * 1000)
+}
+
+export const setNotification = (message, seconds) => {
+    return dispatch => {
+        clearTimeout(timeout)
+        dispatch(notify(message))
+        delayDispatch(dispatch, seconds)
     }
 }
 
-export const showVoteNotification = stuff => {
+export const notify = message => {
     return {
-        type: 'VOTE',
-        data: stuff.data
+        type: 'NOTIFY',
+        message
     }
 }
 

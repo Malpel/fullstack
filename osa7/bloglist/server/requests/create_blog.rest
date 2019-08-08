@@ -1,0 +1,9 @@
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdlbmVyaWNfdXNlcm5hbWUiLCJpZCI6IjVkMmQ5YWQ0MjBhNzdiNWI2MDVmMjFiZiIsImlhdCI6MTU2MzM3MDUzM30.rzW8ASaQY6tNhhYqtDiBVoNBUUnT3mH6B63VYiOqPME
+
+{
+    "title": "Likes default to zero",
+    "author": "Test Author",
+    "url": "https://testurl.co.fi.com"
+}

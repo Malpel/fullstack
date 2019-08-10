@@ -12,6 +12,7 @@ import { initializeBlogs } from './reducers/blogReducer'
 import { login, setUser } from './reducers/loginReducer'
 import { initializeUsers } from './reducers/userReducer'
 import Users from './components/Users'
+import User from './components/User'
 
 const App = (props) => {
     const [blogFormVisible, setBlogFormVisible] = useState(false)
@@ -31,7 +32,7 @@ const App = (props) => {
 
     }, []) */
 
-    const initBlogs =  props.initializeBlogs
+    const initBlogs = props.initializeBlogs
     const initUsers = props.initializeUsers
 
     useEffect(() => {
@@ -39,9 +40,9 @@ const App = (props) => {
         initUsers()
     }, [initBlogs, initUsers])
 
- /*    useEffect(() => {
-        
-    }, []) */
+    /*    useEffect(() => {
+           
+       }, []) */
 
 
 
@@ -88,6 +89,14 @@ const App = (props) => {
         )
     }
 
+    const userById = (id) => {
+        console.log(typeof (id))
+        if (props.users[0] === undefined) {
+            return null
+        }
+        return props.users[0].find(user => user.id === id)
+    }
+
     return (
         <div>
             {props.loggedUser ?
@@ -104,7 +113,8 @@ const App = (props) => {
                             {blogForm()}
                             <br />
                             <Route exact path='/' render={() => <Blogs />} />
-                            <Route path='/users' render={() => <Users />} />
+                            <Route exact path='/users' render={() => <Users />} />
+                            <Route exact path='/users/:id' render={({ match }) => <User user={userById(match.params.id)} />} />
                         </div>
                     </Router>
                 </div>

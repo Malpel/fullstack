@@ -1,14 +1,30 @@
 import React from 'react'
-import Blog from './Blog'
+//import Blog from './Blog'
 //import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
+
 
 const Blogs = (props) => {
-    if (props.blogs) {
+
+    const blogStyle = {
+        paddingTop: 10,
+        paddingLeft: 2,
+        border: 'solid',
+        borderWidth: 1,
+        marginBottom: 5
+    }
+    if (props.blogs[0]) {
+        props.blogs[0].sort((a,b) => b.likes - a.likes)
         return (
             <div>
-                {props.blogs.map(blog => <Blog key={blog.title}
-                    blog={blog} user={props.loggedUser} />)}
+                <br />
+                {props.blogForm()}
+                <br />
+                {props.blogs[0].map(blog =>
+                    <div key={blog.id} style={blogStyle}>
+                        <Link to={`blogs/${blog.id}`}>{blog.title}</Link>
+                    </div>)}
             </div>
         )
     }

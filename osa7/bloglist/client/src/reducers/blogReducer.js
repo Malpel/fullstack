@@ -3,7 +3,8 @@ import blogService from '../services/blogs'
 const reducer = (state = [], action) => {
     switch (action.type) {
         case 'INIT_BLOGS':
-            return action.data.sort((a, b) => b.likes - a.likes)
+            const sortedBlogs = action.data
+            return [...state, sortedBlogs]
         case 'CREATE_BLOG':
             return [...state, action.data]
         case 'LIKE_BLOG':

@@ -13,13 +13,15 @@ import { login, setUser } from './reducers/loginReducer'
 import { initializeUsers } from './reducers/userReducer'
 import Users from './components/Users'
 import User from './components/User'
+import Blog from './components/Blog'
+import Menu from './components/Menu'
 
 const App = (props) => {
     const [blogFormVisible, setBlogFormVisible] = useState(false)
     const username = useField('text')
     const password = useField('password')
 
-    console.log('PROPS ', props.users)
+    console.log('PROPS ', props)
 
     /* useEffect(() => {
         const loggedUserJSON = window.localStorage.getItem('loggedBlogListUser')
@@ -90,11 +92,17 @@ const App = (props) => {
     }
 
     const userById = (id) => {
-        console.log(typeof (id))
         if (props.users[0] === undefined) {
             return null
         }
         return props.users[0].find(user => user.id === id)
+    }
+
+    const blogById = (id) => {
+        if (props.blogs[0] === undefined) {
+            return null
+        }
+        return props.blogs[0].find(blog => blog.id === id)
     }
 
     return (
@@ -103,18 +111,16 @@ const App = (props) => {
                 <div>
                     <Router>
                         <div className='blogsList'>
+                            <Menu logout={logout}/>
                             <h2>blogs</h2>
-                            <Link to='/users'>users</Link>
                             <Notification />
                             <br />
-                            {props.loggedUser.name} logged in <button onClick={logout}>logout</button>
-                            <br />
-                            <br />
-                            {blogForm()}
-                            <br />
-                            <Route exact path='/' render={() => <Blogs />} />
+                           
+                            
+                            <Route exact path='/' render={() => <Blogs blogForm={blogForm}/>} />
                             <Route exact path='/users' render={() => <Users />} />
                             <Route exact path='/users/:id' render={({ match }) => <User user={userById(match.params.id)} />} />
+                            <Route exact path='/blogs/:id' render={({ match }) => <Blog blog={blogById(match.params.id)} />} />
                         </div>
                     </Router>
                 </div>
@@ -136,7 +142,8 @@ const App = (props) => {
 const mapStateToProps = (state) => {
     return {
         loggedUser: state.loggedUser,
-        users: state.users
+        users: state.users,
+        blogs: state.blogs
     }
 }
 

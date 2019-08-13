@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-
+import { Table } from 'semantic-ui-react'
 
 const Users = (props) => {
     console.log('USERS ', props.users[0])
@@ -11,9 +11,26 @@ const Users = (props) => {
     return (
         <div>
             <h2>Users</h2>
-            {props.users[0].map(user => <div key={user.id}>
-                <Link to={`users/${user.id}`}>{user.name}</Link> {user.blogs.length}
-            </div>)}
+            <Table>
+                <Table.Header>
+                    <Table.Row>
+                        <Table.HeaderCell>User</Table.HeaderCell>
+                        <Table.HeaderCell>Added blogs</Table.HeaderCell>
+                    </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                    {props.users[0].map(user =>
+                        <Table.Row key={user.id}>
+                            <Table.Cell>
+                                <Link to={`users/${user.id}`}>{user.username}</Link>
+                            </Table.Cell>
+                            <Table.Cell>
+                                {user.blogs.length}
+                            </Table.Cell>
+                        </Table.Row>
+                    )}
+                </Table.Body>
+            </Table>
         </div>
     )
 }

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { useField } from '../hooks/index'
 import { setNotification } from '../reducers/notificationReducer'
 import { createBlog } from '../reducers/blogReducer'
+import { Form, Button, Segment } from 'semantic-ui-react'
 
 const BlogForm = (props) => {
     const title = useField('text')
@@ -31,20 +32,25 @@ const BlogForm = (props) => {
     }
 
     return (
-        <div>
-            <form onSubmit={addBlog}>
-                <div>
-                    title: <input {...title} />
-                </div>
-                <div>
-                    author: <input {...author} />
-                </div>
-                <div>
-                    url: <input {...url} />
-                </div>
-                <button type='submit'>create</button>
-            </form>
-        </div>
+        <Segment>
+            <h3>Add a new blog</h3>
+            <Form onSubmit={addBlog}>
+                <Form.Field>
+                    <label>Title: </label>
+                    <input {...title} required />
+                </Form.Field>
+                <Form.Field>
+                    <label>Author: </label>
+                    <input {...author} required />
+                </Form.Field>
+                <Form.Field>
+                    <label>URL: </label>
+                    <input {...url} required />
+                </Form.Field>
+                <Button positive type='submit'>Create</Button>
+            </Form>
+            <br />
+        </Segment>
     )
 }
 

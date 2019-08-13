@@ -35,5 +35,5 @@ export const setUser = user => {
         data: user
     }
 }
- 
+
 export default reducer

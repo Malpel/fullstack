@@ -3,28 +3,22 @@ import React from 'react'
 //import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { Header, Segment } from 'semantic-ui-react'
 
 
 const Blogs = (props) => {
-
-    const blogStyle = {
-        paddingTop: 10,
-        paddingLeft: 2,
-        border: 'solid',
-        borderWidth: 1,
-        marginBottom: 5
-    }
     if (props.blogs[0]) {
-        props.blogs[0].sort((a,b) => b.likes - a.likes)
+        props.blogs[0].sort((a, b) => b.likes - a.likes)
         return (
             <div>
-                <br />
+                <Header as='h2'>Blogs</Header>
                 {props.blogForm()}
                 <br />
                 {props.blogs[0].map(blog =>
-                    <div key={blog.id} style={blogStyle}>
+                    <Segment vertical key={blog.id} >
                         <Link to={`blogs/${blog.id}`}>{blog.title}</Link>
-                    </div>)}
+                    </Segment>
+                )}
             </div>
         )
     }

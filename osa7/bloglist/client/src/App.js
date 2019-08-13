@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import LoginForm from './components/LoginForm'
 import Blogs from './components/Blogs'
-//import blogService from './services/blogs'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import { useField } from './hooks/index'
@@ -15,6 +14,8 @@ import Users from './components/Users'
 import User from './components/User'
 import Blog from './components/Blog'
 import Menu from './components/Menu'
+import { Container, Button, Header } from 'semantic-ui-react'
+import blogService from './services/blogs'
 
 const App = (props) => {
     const [blogFormVisible, setBlogFormVisible] = useState(false)
@@ -23,7 +24,7 @@ const App = (props) => {
 
     console.log('PROPS ', props)
 
-    /* useEffect(() => {
+    useEffect(() => {
         const loggedUserJSON = window.localStorage.getItem('loggedBlogListUser')
 
         if (loggedUserJSON) {
@@ -32,7 +33,7 @@ const App = (props) => {
             blogService.setToken(user.token)
         }
 
-    }, []) */
+    }, [])
 
     const initBlogs = props.initializeBlogs
     const initUsers = props.initializeUsers
@@ -41,12 +42,6 @@ const App = (props) => {
         initBlogs()
         initUsers()
     }, [initBlogs, initUsers])
-
-    /*    useEffect(() => {
-           
-       }, []) */
-
-
 
     const handleLogin = async (event) => {
         event.preventDefault()
@@ -62,7 +57,7 @@ const App = (props) => {
 
         catch (exception) {
             console.log(exception)
-            props.setNotification(`wrong username or password`, 'error')
+            props.setNotification('wrong username or password', 'error')
             password.reset.resetValue()
         }
     }
@@ -79,13 +74,11 @@ const App = (props) => {
         return (
             <div>
                 <div style={hideWhenVisible}>
-                    <button onClick={() => setBlogFormVisible(true)}>new blog</button>
+                    <Button primary onClick={() => setBlogFormVisible(true)}>New Blog</Button>
                 </div>
                 <div style={showWhenVisible} >
-                    <h2> create new</h2>
                     <BlogForm />
-
-                    <button onClick={() => setBlogFormVisible(false)}>cancel</button>
+                    <Button onClick={() => setBlogFormVisible(false)}>Cancel</Button>
                 </div>
             </div >
         )
@@ -111,29 +104,32 @@ const App = (props) => {
                 <div>
                     <Router>
                         <div className='blogsList'>
-                            <Menu logout={logout}/>
-                            <h2>blogs</h2>
-                            <Notification />
+                            <Menu logout={logout} />
+                            <Container>
+                                <Notification />
+                                <Route exact path='/' render={() => <Blogs blogForm={blogForm} />} />
+                                <Route exact path='/users' render={() => <Users />} />
+                                <Route exact path='/users/:id' render={({ match }) => <User user={userById(match.params.id)} />} />
+                                <Route exact path='/blogs/:id' render={({ match }) => <Blog blog={blogById(match.params.id)} />} />
+                            </Container>
                             <br />
-                           
-                            
-                            <Route exact path='/' render={() => <Blogs blogForm={blogForm}/>} />
-                            <Route exact path='/users' render={() => <Users />} />
-                            <Route exact path='/users/:id' render={({ match }) => <User user={userById(match.params.id)} />} />
-                            <Route exact path='/blogs/:id' render={({ match }) => <Blog blog={blogById(match.params.id)} />} />
+
                         </div>
                     </Router>
                 </div>
 
                 :
+                <Container>
+                    <div className='loginForm'>
+                        <br />
+                        <Header as='h2'>Login</Header>
+                        <Notification />
+                        <br />
+                        <LoginForm handleLogin={handleLogin}
+                            username={username} password={password} />
+                    </div>
+                </Container>
 
-                <div className='loginForm'>
-                    <h2>Login</h2>
-                    <Notification />
-                    <br />
-                    <LoginForm handleLogin={handleLogin}
-                        username={username} password={password} />
-                </div>
             }
         </div>
     )

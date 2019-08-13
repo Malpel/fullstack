@@ -3,15 +3,13 @@ import blogService from '../services/blogs'
 const reducer = (state = [], action) => {
     switch (action.type) {
         case 'INIT_BLOGS':
-            const sortedBlogs = action.data
-            return [...state, sortedBlogs]
+            return [...state, action.data]
         case 'CREATE_BLOG':
             return [...state, action.data]
         case 'LIKE_BLOG':
-            const likedBlog = action.data
-            return state.map(blog => blog.id !== likedBlog.id ?
+            return state.map(blog => blog.id !== action.data.id ?
                 blog
-                : likedBlog)
+                : action.data)
         case 'REMOVE_BLOG':
             return state.filter(b => b.id !== action.data)
         default:

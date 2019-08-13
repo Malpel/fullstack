@@ -1,8 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { Menu, Button } from 'semantic-ui-react'
 
-const Menu = (props) => {
+const NavMenu = (props) => {
     if (!props.loggedUser) {
         return null
     }
@@ -12,11 +13,22 @@ const Menu = (props) => {
     }
 
     return (
-        <div>
-            <Link to='/' style={style}>blogs</Link>
-            <Link to='/users' style={style}>users</Link>
-            {props.loggedUser.name} logged in <button onClick={props.logout}>logout</button>
-        </div>
+        <Menu borderless >
+            <Menu.Item  >
+                <Link to='/' style={style}>Blogs</Link>
+            </Menu.Item >
+            <Menu.Item >
+                <Link to='/users' style={style}>Users</Link>
+            </Menu.Item>
+            <Menu.Menu position='right'>
+                <Menu.Item>
+                    <h4>{props.loggedUser.username}</h4>
+                </Menu.Item>
+                <Menu.Item >
+                    <Button compact color='grey' onClick={props.logout}>Logout</Button>
+                </Menu.Item>
+            </Menu.Menu>
+        </Menu >
     )
 }
 
@@ -26,4 +38,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps)(Menu)
+export default connect(mapStateToProps)(NavMenu)

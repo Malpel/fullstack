@@ -7,33 +7,38 @@ import { Header, Segment } from 'semantic-ui-react'
 
 
 const Blogs = (props) => {
-    if (props.blogs[0]) {
-        props.blogs[0].sort((a, b) => b.likes - a.likes)
-        return (
-            <div>
-                <Header as='h2'>Blogs</Header>
-                {props.blogForm()}
-                <br />
-                {props.blogs[0].map(blog =>
-                    <Segment vertical key={blog.id} >
-                        <Link to={`blogs/${blog.id}`}>{blog.title}</Link>
-                    </Segment>
-                )}
-            </div>
-        )
+    if (!props.blogs) {
+        return null
     }
-    return <div>
-        nothing
-    </div>
+
+    return (
+        <div data-cy='bloglist'>
+            <Header data-cy='header' as='h2'>Blogs</Header>
+            {props.blogForm()}
+            <br />
+            {props.sortedBlogs.map(blog =>
+                <Segment vertical key={blog.id} >
+                    <Link to={`blogs/${blog.id}`}>{blog.title}</Link>
+                </Segment>
+            )}
+        </div>
+    )
+
 }
 
 /* Blogs.propTypes = {
     user: PropTypes.string.isRequired
 } */
 
+const sortedBlogs = ({ blogs }) => {
+    if (!blogs) return []
+    return blogs.sort((a, b) => b.likes - a.likes)
+}
+
 const mapStateToProps = (state) => {
     return {
-        blogs: state.blogs
+        blogs: state.blogs,
+        sortedBlogs: sortedBlogs(state)
     }
 }
 

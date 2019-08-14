@@ -7,13 +7,13 @@ const LoginForm = ({ handleLogin, username, password }) => {
         <Form onSubmit={handleLogin}>
             <Form.Field>
                 Username
-                <input {...username} />
+                <input data-cy='username' {...username} />
             </Form.Field>
             <Form.Field>
                 Password
-                <input {...password} />
+                <input data-cy='password' {...password} />
             </Form.Field>
-            <Button primary type='submit'>Login</Button>
+            <Button primary type='submit' data-cy='login'>Login</Button>
         </Form>
     )
 }

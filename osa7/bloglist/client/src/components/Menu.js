@@ -21,7 +21,7 @@ const NavMenu = (props) => {
                 <Link to='/users' style={style}>Users</Link>
             </Menu.Item>
             <Menu.Menu position='right'>
-                <Menu.Item>
+                <Menu.Item data-cy='menu-username'>
                     <h4>{props.loggedUser.username}</h4>
                 </Menu.Item>
                 <Menu.Item >

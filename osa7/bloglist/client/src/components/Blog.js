@@ -9,15 +9,10 @@ import { Comment, Header, TextArea, Button, Segment, Statistic } from 'semantic-
 const Blog = (props) => {
     console.log('BLOG', props.blog)
 
-    const [blog, setBlog] = useState(props.blog)
     const [comments, setComments] = useState(null)
     const comment = useField('text')
 
-    if (!blog && !props.blog) {
-        return null
-    } else if (!blog && props.blog) {
-        setBlog(props.blog)
-        setComments(props.blog.comments)
+    if (!props.blog) {
         return null
     } else if (!comments && props.blog) {
         setComments(props.blog.comments)
@@ -26,16 +21,8 @@ const Blog = (props) => {
 
     const likeBlog = async (blog) => {
         try {
-            const blogObject = {
-                id: blog.id,
-                title: blog.title,
-                author: blog.author,
-                url: blog.url,
-                likes: (blog.likes + 1),
-                user: blog.user
-            }
-            await props.likeBlog(blog.id, blogObject)
-            setBlog(blogObject)
+            console.log('BLOGVIEW', blog)
+            await props.likeBlog(blog)
         }
         catch (exception) {
             console.log(exception)
@@ -68,7 +55,7 @@ const Blog = (props) => {
 
     const addComment = async (event) => {
         event.preventDefault()
-        const addedComment = await commentService.saveComment(blog.id,
+        const addedComment = await commentService.saveComment(props.blog.id,
             comment.value,
             props.loggedUser.token)
         setComments([...comments, addedComment])
@@ -78,12 +65,12 @@ const Blog = (props) => {
     return (
         <div>
             <Segment vertical>
-                <h2>&quot;{blog.title}&quot; by {blog.author}</h2>
-                <h3><a href={blog.url}>{blog.url}</a></h3>
+                <h2>&quot;{props.blog.title}&quot; by {props.blog.author}</h2>
+                <h3><a href={props.blog.url}>{props.blog.url}</a></h3>
                 <Segment compact>
                     <Statistic size='tiny'>
-                        <Statistic.Value>
-                            {blog.likes}
+                        <Statistic.Value data-cy='blogLikes'>
+                            {props.blog.likes}
                         </Statistic.Value>
                         <Statistic.Label>
                             likes
@@ -91,9 +78,11 @@ const Blog = (props) => {
                     </Statistic>
                 </Segment>
 
-                <Button color='pink' onClick={() => likeBlog(blog)}>Like</Button>
+                <Button color='pink'
+                    onClick={() => likeBlog(props.blog)}
+                    data-cy='likeButton'>Like</Button>
                 <br />
-                <h4>Added by {blog.user.username}</h4>
+                <h4>Added by {props.blog.user.username}</h4>
                 <br />
                 {removeButton()}
             </Segment>
@@ -126,6 +115,7 @@ const Blog = (props) => {
         </div>
     )
 }
+// REDIRECT TO FRONTPAGE IF JUST DELETED BLOG
 
 /* Blog.propTypes = {
                 blog: PropTypes.object.isRequired,
@@ -135,7 +125,8 @@ const Blog = (props) => {
 const mapStateToProps = (state) => {
     return {
         blogs: state.blogs,
-        loggedUser: state.loggedUser
+        loggedUser: state.loggedUser,
+        likeBlog
     }
 }
 

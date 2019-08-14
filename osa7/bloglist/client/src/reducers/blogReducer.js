@@ -3,7 +3,7 @@ import blogService from '../services/blogs'
 const reducer = (state = [], action) => {
     switch (action.type) {
         case 'INIT_BLOGS':
-            return [...state, action.data]
+            return action.data
         case 'CREATE_BLOG':
             return [...state, action.data]
         case 'LIKE_BLOG':
@@ -37,9 +37,20 @@ export const createBlog = blogObject => {
     }
 }
 
-export const likeBlog = (id, blogObject) => {
+export const likeBlog = blog => {
     return async dispatch => {
-        const updatedBlog = await blogService.update(id, blogObject)
+        console.log('REDUCER', blog)
+        const updatedBlog = await blogService.update(blog.id,
+            {
+                likes: blog.likes + 1,
+                user: {
+                    id: blog.user.id,
+                    username: blog.user.username,
+                    name: blog.user.name
+                }
+            }
+        )
+        console.log('UPDATEDBLOG', updatedBlog)
         dispatch({
             type: 'LIKE_BLOG',
             data: updatedBlog

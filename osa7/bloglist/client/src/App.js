@@ -43,6 +43,7 @@ const App = (props) => {
         initUsers()
     }, [initBlogs, initUsers])
 
+
     const handleLogin = async (event) => {
         event.preventDefault()
         try {
@@ -74,7 +75,9 @@ const App = (props) => {
         return (
             <div>
                 <div style={hideWhenVisible}>
-                    <Button primary onClick={() => setBlogFormVisible(true)}>New Blog</Button>
+                    <Button primary
+                        onClick={() => setBlogFormVisible(true)}
+                        data-cy='newBlog'>New Blog</Button>
                 </div>
                 <div style={showWhenVisible} >
                     <BlogForm />
@@ -85,33 +88,33 @@ const App = (props) => {
     }
 
     const userById = (id) => {
-        if (props.users[0] === undefined) {
+        if (props.users === undefined) {
             return null
         }
-        return props.users[0].find(user => user.id === id)
+        return props.users.find(user => user.id === id)
     }
 
     const blogById = (id) => {
-        if (props.blogs[0] === undefined) {
+        if (props.blogs === undefined) {
             return null
         }
-        return props.blogs[0].find(blog => blog.id === id)
+        return props.blogs.find(blog => blog.id === id)
     }
 
     return (
-        <div>
+        <Container>
             {props.loggedUser ?
                 <div>
                     <Router>
                         <div className='blogsList'>
                             <Menu logout={logout} />
-                            <Container>
-                                <Notification />
-                                <Route exact path='/' render={() => <Blogs blogForm={blogForm} />} />
-                                <Route exact path='/users' render={() => <Users />} />
-                                <Route exact path='/users/:id' render={({ match }) => <User user={userById(match.params.id)} />} />
-                                <Route exact path='/blogs/:id' render={({ match }) => <Blog blog={blogById(match.params.id)} />} />
-                            </Container>
+
+                            <Notification />
+                            <Route exact path='/' render={() => <Blogs blogForm={blogForm} />} />
+                            <Route exact path='/users' render={() => <Users />} />
+                            <Route exact path='/users/:id' render={({ match }) => <User user={userById(match.params.id)} />} />
+                            <Route exact path='/blogs/:id' render={({ match }) => <Blog blog={blogById(match.params.id)} />} />
+
                             <br />
 
                         </div>
@@ -119,19 +122,19 @@ const App = (props) => {
                 </div>
 
                 :
-                <Container>
-                    <div className='loginForm'>
-                        <br />
-                        <Header as='h2'>Login</Header>
-                        <Notification />
-                        <br />
-                        <LoginForm handleLogin={handleLogin}
-                            username={username} password={password} />
-                    </div>
-                </Container>
+
+                <div className='loginForm'>
+                    <br />
+                    <Header as='h2'>Login</Header>
+                    <Notification />
+                    <br />
+                    <LoginForm handleLogin={handleLogin}
+                        username={username} password={password} />
+                </div>
+
 
             }
-        </div>
+        </Container>
     )
 }
 

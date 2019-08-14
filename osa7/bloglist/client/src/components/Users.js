@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
 
 const Users = (props) => {
-    console.log('USERS ', props.users[0])
-    if (props.users[0] === undefined) {
+    console.log('USERS ', props.users)
+    if (props.users === undefined) {
         return null
     }
     return (
@@ -19,7 +19,7 @@ const Users = (props) => {
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                    {props.users[0].map(user =>
+                    {props.users.map(user =>
                         <Table.Row key={user.id}>
                             <Table.Cell>
                                 <Link to={`users/${user.id}`}>{user.username}</Link>

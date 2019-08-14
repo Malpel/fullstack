@@ -8,15 +8,15 @@ const Comment = require('../models/comment')
 blogsRouter.get('/', async (req, res) => {
     const blogs = await Blog.find({})
         .populate('user', { username: 1, name: 1 })
-        .populate('comments', { content: 1 })
-        
+        .populate('comments', { content: 1 })
+
     res.json(blogs.map(blog => blog.toJSON()))
     console.log('GET successful')
 })
 
 blogsRouter.get('/:id', async (req, res, next) => {
     try {
-        const blog = await Blog.findById(req.params.id)
+        const blog = await Blog.findById(req.params.id).populate('comments')
         if (blog) {
             res.json(blog.toJSON())
         } else {
@@ -87,7 +87,7 @@ blogsRouter.put('/:id', async (req, res, next) => {
     }
 
     try {
-        const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, blog, { new: true })
+        const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, blog, { new: true }).populate('user')
         res.json(updatedBlog.toJSON())
     }
     catch (exception) {

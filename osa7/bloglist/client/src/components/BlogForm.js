@@ -20,7 +20,7 @@ const BlogForm = (props) => {
                 url: url.value
             }
 
-            props.createBlog(blogObject)
+            await props.createBlog(blogObject)
             props.setNotification(`a new blog ${blogObject.title} by ${blogObject.author} added`)
             title.reset.resetValue()
             author.reset.resetValue()
@@ -37,17 +37,17 @@ const BlogForm = (props) => {
             <Form onSubmit={addBlog}>
                 <Form.Field>
                     <label>Title: </label>
-                    <input {...title} required />
+                    <input {...title} required data-cy='title' />
                 </Form.Field>
                 <Form.Field>
                     <label>Author: </label>
-                    <input {...author} required />
+                    <input {...author} required data-cy='author' />
                 </Form.Field>
                 <Form.Field>
                     <label>URL: </label>
-                    <input {...url} required />
+                    <input {...url} required data-cy='url' />
                 </Form.Field>
-                <Button positive type='submit'>Create</Button>
+                <Button positive type='submit' data-cy='submitBlog'>Create</Button>
             </Form>
             <br />
         </Segment>
@@ -70,9 +70,4 @@ const mapDispatchToProps = {
     createBlog
 }
 
-const ConnecteBlogForm = connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(BlogForm)
-
-export default ConnecteBlogForm
+export default connect(mapStateToProps, mapDispatchToProps)(BlogForm)

@@ -15,13 +15,12 @@ const Notification = (props) => {
         }
 
         return (
-            <div style={style}>
+            <div style={style} data-cy='notification'>
                 {props.notification.message}
             </div>
         )
-
     }
-    
+
     return null
 }
 

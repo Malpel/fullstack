@@ -53,12 +53,12 @@ const Blog = (props) => {
         }
     }
 
-    const addComment = async (event) => {
+    const saveComment = async (event) => {
         event.preventDefault()
-        const addedComment = await commentService.saveComment(props.blog.id,
+        const savedComment = await commentService.saveComment(props.blog.id,
             comment.value,
             props.loggedUser.token)
-        setComments([...comments, addedComment])
+        setComments([...comments, savedComment])
         comment.reset.resetValue()
     }
 
@@ -89,12 +89,14 @@ const Blog = (props) => {
 
             <Segment vertical>
                 <Header as='h3'>Comments</Header>
-                <form onSubmit={addComment}>
-                    <TextArea required placeholder='Leave a comment...' style={{ minHeight: 100 }} {...comment} />
+                <form onSubmit={saveComment}>
+                    <TextArea required placeholder='Leave a comment...'
+                        style={{ minHeight: 100 }} {...comment}
+                        data-cy='commentBox' />
                     <br />
-                    <Button primary type='submit'>Add comment</Button>
+                    <Button primary type='submit' data-cy='commentButton'>Save comment</Button>
                 </form>
-                <Comment.Group>
+                <Comment.Group data-cy='commentList'>
                     {comments.map(
                         comment => <Comment key={comment.content}>
                             <Comment.Content>

@@ -47,15 +47,19 @@ describe('Bloglist', function () {
     })
 
     describe('when logged in', function () {
+        // muuta  ohjelmamlliseskti kirjautumiseksi
+        // (selvitä cross origin virhe)
         beforeEach(function () {
-            cy.get('[data-cy=username')
+            /* cy.get('[data-cy=username')
                 .type('M_Nem')
 
             cy.get('[data-cy=password]')
                 .type('good_password')
 
             cy.get('[data-cy=login]')
-                .click()
+                .click() */
+            cy.login()
+            cy.visit('/')
         })
 
         it('a new blog can be added', function () {
@@ -79,13 +83,24 @@ describe('Bloglist', function () {
 
         })
 
+        it('users can be browsed', function () {
+            cy.get('[data-cy=usersMenuLink]')
+                .click()
+
+            cy.get('td:first')
+                .click()
+
+            cy.contains('M_Nem')
+            cy.contains('Added blogs')
+        })
+
         describe('and a blog exists', function () {
             beforeEach(function () {
                 cy.get('[data-cy=newBlog]')
                     .click()
 
                 cy.get('[data-cy=title]')
-                    .type('Second Test Blog')
+                    .type('Cypress E2E-testing')
 
                 cy.get('[data-cy=author]')
                     .type('Cypress Hill')
@@ -97,19 +112,34 @@ describe('Bloglist', function () {
                     .click()
 
                 cy.get('[data-cy=notification]')
-                    .contains('a new blog Second Test Blog by Cypress Hill added')
+                    .contains('a new blog Cypress E2E-testing by Cypress Hill added')
             })
 
             it('it can be liked', function () {
                 cy.get('[data-cy=bloglist]')
-                    .contains('Second Test Blog')
+                    .contains('Cypress E2E-testing')
                     .click()
 
                 cy.get('[data-cy=likeButton]')
                     .click()
 
-                cy.get('[blogLikes]')
+                cy.get('[data-cy=blogLikes]')
                     .contains('1')
+            })
+
+            it('it can be commented', function () {
+                cy.get('[data-cy=bloglist]')
+                    .contains('Cypress E2E-testing')
+                    .click()
+
+                cy.get('[data-cy=commentBox]')
+                    .type('A well thought out comment')
+
+                cy.get('[data-cy=commentButton]')
+                    .click()
+
+                cy.get('[data-cy=commentList]')
+                    .contains('A well thought out comment')
             })
         })
     })

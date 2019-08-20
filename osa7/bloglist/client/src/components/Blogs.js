@@ -1,6 +1,4 @@
 import React from 'react'
-//import Blog from './Blog'
-//import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Header, Segment } from 'semantic-ui-react'
@@ -25,10 +23,6 @@ const Blogs = (props) => {
     )
 
 }
-
-/* Blogs.propTypes = {
-    user: PropTypes.string.isRequired
-} */
 
 const sortedBlogs = ({ blogs }) => {
     if (!blogs) return []

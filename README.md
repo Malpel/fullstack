@@ -25,3 +25,7 @@
 ## Osa 6: [Sovelluksen tilan hallinta Redux-kirjastolla](https://github.com/Malpel/fullstack/tree/master/osa6)
 * [unicafe-redux 6.1 - 6.2](https://github.com/Malpel/fullstack/tree/master/osa6/unicafe-redux)
 * [redux-anecdotes 6.3 - 6.21](https://github.com/Malpel/fullstack/tree/master/osa6/redux-anecdotes)
+
+## osa 7: [React router, tyylikirjastot ja webpack](https://github.com/Malpel/fullstack/tree/master/osa7)
+* [routed-anecdotes 7.1 - 7.3](https://github.com/Malpel/fullstack/tree/master/osa7/routed_anecdotes)
+* [Blogilistan laajennus](https://github.com/Malpel/fullstack/tree/master/osa7/bloglist), sovellus myös [Herokussa](https://quiet-stream-29184.herokuapp.com/)

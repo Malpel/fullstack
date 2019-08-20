@@ -8,7 +8,7 @@ describe('Bloglist', function () {
             password: 'good_password'
         }
         cy.request('POST', 'http://localhost:3001/api/users/', user)
-        cy.visit('http://localhost:3000/')
+        cy.visit('/')
     })
 
     it('visits the login page', function () {
@@ -16,14 +16,15 @@ describe('Bloglist', function () {
     })
 
     it('valid user can login', function () {
+
         cy.get('[data-cy=username')
             .type('M_Nem')
 
         cy.get('[data-cy=password]')
             .type('good_password')
 
-        cy.get('[data-cy=login]')
-            .click()
+        cy.get('form')
+            .submit()
 
         cy.get('[data-cy=header]')
             .contains('Blogs')
@@ -47,19 +48,21 @@ describe('Bloglist', function () {
     })
 
     describe('when logged in', function () {
-        // muuta  ohjelmamlliseskti kirjautumiseksi
-        // (selvitä cross origin virhe)
+
+        // couldn't get programmatic login to work
+        /* cy.login('M_Nem', 'good_password')
+            cy.visit('/') */
+
         beforeEach(function () {
-            /* cy.get('[data-cy=username')
+            cy.get('[data-cy=username')
                 .type('M_Nem')
 
             cy.get('[data-cy=password]')
                 .type('good_password')
 
-            cy.get('[data-cy=login]')
-                .click() */
-            cy.login()
-            cy.visit('/')
+            cy.get('form')
+                .submit()
+
         })
 
         it('a new blog can be added', function () {

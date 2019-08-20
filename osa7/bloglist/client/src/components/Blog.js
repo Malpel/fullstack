@@ -117,12 +117,6 @@ const Blog = (props) => {
         </div>
     )
 }
-// REDIRECT TO FRONTPAGE IF JUST DELETED BLOG
-
-/* Blog.propTypes = {
-                blog: PropTypes.object.isRequired,
-            user: PropTypes.string.isRequired
-        } */
 
 const mapStateToProps = (state) => {
     return {

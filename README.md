@@ -28,4 +28,10 @@
 
 ## osa 7: [React router, tyylikirjastot ja webpack](https://github.com/Malpel/fullstack/tree/master/osa7)
 * [routed-anecdotes 7.1 - 7.3](https://github.com/Malpel/fullstack/tree/master/osa7/routed_anecdotes)
-* [Blogilistan laajennus](https://github.com/Malpel/fullstack/tree/master/osa7/bloglist), sovellus myös [Herokussa](https://quiet-stream-29184.herokuapp.com/)
+* [Blogilistan laajennus](https://github.com/Malpel/fullstack/tree/master/osa7/bloglist),
+
+Blogilista myös [Herokussa](https://quiet-stream-29184.herokuapp.com/)
+
+username: generic_username
+
+password: salis123

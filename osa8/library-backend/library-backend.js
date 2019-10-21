@@ -89,7 +89,7 @@ let books = [
 const typeDefs = gql`
     type Author {
         name: String!
-        born: String
+        born: Int
         bookCount: Int!
         id: ID!
     }
@@ -159,15 +159,17 @@ const resolvers = {
             books = books.concat(book)
             if (!existingAuthor(book.author)) {
                 const author = {
-                    name: book.author
+                    name: book.author,
+                    id: uuid()
                 }
                 authors = authors.concat(author)
             }
             return book
         },
         editAuthor: (root, args) => {
-            const author = { name: args.name, born: args.setBornTo }
             if (existingAuthor(args.name)) {
+                const before = authors.find(a => a.name === args.name)
+                const author = { name: args.name, born: args.setBornTo, id: before.id }
                 authors = authors.filter(a => a.name !== args.name)
                     .concat(author)
                 return author

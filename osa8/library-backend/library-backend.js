@@ -19,7 +19,7 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
         console.log('connected to MongoDB')
     })
     .catch((error) => {
-        console.log('error connection to MongoDB:', error.message)
+        console.log('error connecting to MongoDB:', error.message)
     })
 
 const jwt = require('jsonwebtoken')
@@ -84,19 +84,8 @@ const resolvers = {
     Query: {
         bookCount: () => Book.collection.countDocuments(),
         authorCount: () => Author.collection.countDocuments(),
-        allBooks: async (root, args) => {
-            console.log('Args ', args)
-            // const books = await Book.find({}).populate('author')
-            /* if (args.author && args.genre) {
-                return books.filter(b => b.author === args.author).filter(b => b.genres.includes(args.genre))
-            } else if (args.author) {
-                return books.filter(b => b.author === args.author)
-            } else if (args.genre) {
-                return books.filter(b => b.genres.includes(args.genre))
-            } */
-            return await Book.find({}).populate('author')
-        },
-        allAuthors: () => Author.find({}).populate('books'),
+        allBooks: async () => await Book.find({}).populate('author'),
+        allAuthors: async () => await Author.find({}).populate('books'),
         me: (root, args, context) => {
             return context.currentUser
         }
@@ -140,7 +129,10 @@ const resolvers = {
                 await book.save()
                 await author.save()
             } catch (error) {
-                author.delete()
+                if (!existingAuthor) {
+                    author.delete()
+                }
+
                 throw new UserInputError(error.message, {
                     invalidArgs: args
                 })
@@ -167,7 +159,10 @@ const resolvers = {
             return author
         },
         createUser: (root, args) => {
-            const user = new User({ username: args.username })
+            const user = new User({
+                username: args.username,
+                favoriteGenre: args.favoriteGenre
+            })
 
             return user.save()
                 .catch(error => {
@@ -197,10 +192,11 @@ const server = new ApolloServer({
     typeDefs,
     resolvers,
     context: async ({ req }) => {
-        const auth = req ? req.header.authorization : null
+        const auth = req ? req.headers.authorization : null
         if (auth && auth.toLowerCase().startsWith('bearer')) {
-            const decodedToken = jwt.verify(auth.substing(7), JWT_SECRET)
+            const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET)
             const currentUser = await User.findById(decodedToken.id)
+            console.log('IN CONTEXT CURRENT USER:', currentUser)
             return { currentUser }
         }
     }

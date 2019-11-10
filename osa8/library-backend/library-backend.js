@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const Book = require('./models/book')
 const Author = require('./models/author')
 const User = require('./models/user')
+const Genre = require('./models/genre')
 
 mongoose.set('useFindAndModify', false)
 mongoose.set('useUnifiedTopology', true)
@@ -50,6 +51,11 @@ const typeDefs = gql`
     type Token {
         value: String!
     }
+
+    type Genre {
+        name: String!
+        id: ID!
+    }
     
     type Query {
         bookCount: Int!
@@ -57,6 +63,7 @@ const typeDefs = gql`
         allBooks(author: String, genre: String): [Book!]!
         allAuthors: [Author!]!
         me: User
+        allGenres: [Genre!]!
     }
 
     type Mutation {
@@ -78,17 +85,27 @@ const typeDefs = gql`
             username: String!
             password: String!
         ): Token
+        addGenre(
+            name: String!
+        ): Genre
     }
 `
 const resolvers = {
     Query: {
         bookCount: () => Book.collection.countDocuments(),
         authorCount: () => Author.collection.countDocuments(),
-        allBooks: async () => await Book.find({}).populate('author'),
+        allBooks: async (root, args) => {
+            const books = await Book.find({}).populate('author')
+            if (args.genre) {
+                return books.filter(b => b.genres.includes(args.genre))
+            }
+            return books
+        },
         allAuthors: async () => await Author.find({}).populate('books'),
         me: (root, args, context) => {
             return context.currentUser
-        }
+        },
+        allGenres: async () => await Genre.find({})
     },
     Book: {
         title: (root) => root.title,
@@ -108,15 +125,17 @@ const resolvers = {
             const currentUser = context.currentUser
             let book = {}
             let author = {}
-
+            
             if (!currentUser) {
                 throw new AuthenticationError('not authenticated')
             }
 
             const existingAuthor = await Author.findOne({ name: args.author })
+
             if (existingAuthor) {
                 author = existingAuthor
                 book = new Book({ ...args, author: existingAuthor.id })
+
                 author.books = author.books.concat(book)
             } else {
                 author = new Author({ name: args.author })
@@ -183,6 +202,15 @@ const resolvers = {
             }
 
             return { value: jwt.sign(userForToken, JWT_SECRET) }
+        },
+        addGenre: async (root, args, context) => {
+            const currentUser = context.currentUser
+
+            if (!currentUser) {
+                throw new AuthenticationError('not authenticated')
+            }
+            return await new Genre({ name: args.name }).save()
+
         }
     }
 
@@ -196,7 +224,6 @@ const server = new ApolloServer({
         if (auth && auth.toLowerCase().startsWith('bearer')) {
             const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET)
             const currentUser = await User.findById(decodedToken.id)
-            console.log('IN CONTEXT CURRENT USER:', currentUser)
             return { currentUser }
         }
     }

@@ -144,6 +144,15 @@ const resolvers = {
                 author.books = author.books.concat(book)
             }
 
+            for (let i = 0; i < args.genres.length; i++) {
+                let genre = args.genres[i]
+                let existingGenre = await Genre.findOne({ name: genre })
+                if (!existingGenre) {
+                    let newGenre = new Genre({ name: genre })
+                    newGenre.save()
+                }
+            }
+
             try {
                 await book.save()
                 await author.save()
@@ -202,15 +211,6 @@ const resolvers = {
             }
 
             return { value: jwt.sign(userForToken, JWT_SECRET) }
-        },
-        addGenre: async (root, args, context) => {
-            const currentUser = context.currentUser
-
-            if (!currentUser) {
-                throw new AuthenticationError('not authenticated')
-            }
-            return await new Genre({ name: args.name }).save()
-
         }
     }
 

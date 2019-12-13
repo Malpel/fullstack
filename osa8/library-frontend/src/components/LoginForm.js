@@ -20,7 +20,7 @@ const LoginForm = (props) => {
             //props.setToken(token)
             localStorage.setItem('library-user-token', token)
             props.setPage('authors')
-//window.location.reload()
+            window.location.reload()
         }
 
         setUsername('')

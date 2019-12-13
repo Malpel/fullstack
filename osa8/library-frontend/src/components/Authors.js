@@ -12,10 +12,7 @@ const Authors = (props) => {
         return <div>loading...</div>
     }
 
-    console.log('PROPS RESULT', props.result)
-
     const authors = props.result.data.allAuthors
-    console.log('AUTHORS', authors)
 
     const submit = async (e) => {
         e.preventDefault()

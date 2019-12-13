@@ -35,3 +35,5 @@ Blogilista myös [Herokussa](https://quiet-stream-29184.herokuapp.com/)
 username: generic_username
 
 password: salis123
+
+## osa 8: [GraphQL](https://github.com/Malpel/fullstack/tree/master/osa8)

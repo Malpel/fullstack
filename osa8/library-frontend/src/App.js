@@ -5,6 +5,7 @@ import NewBook from './components/NewBook'
 import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 import LoginForm from './components/LoginForm'
+import Recommended from './components/Recommended'
 
 const ALL_AUTHORS = gql`
   {
@@ -90,6 +91,14 @@ query allBooksByGenre($genre: String!) {
 }
 `
 
+const CURRENT_USER = gql`
+    {
+        me {
+            favoriteGenre
+        }
+    }
+`
+
 const App = () => {
     const [page, setPage] = useState('authors')
     const [errorMessage, setErrorMessage] = useState(null)
@@ -98,6 +107,7 @@ const App = () => {
     const client = useApolloClient()
     const authors = useQuery(ALL_AUTHORS)
     const books = useQuery(ALL_BOOKS)
+    const currentUser = useQuery(CURRENT_USER)
 
     useEffect(() => {
         const loggedUserJSON = window.localStorage.getItem('library-user-token')
@@ -144,10 +154,10 @@ const App = () => {
             <div>
                 <button onClick={() => setPage('authors')}>authors</button>
                 <button onClick={() => setPage('books')}>books</button>
+                <button style={loggedInStyle} onClick={() => setPage('recommended')}>recommended</button>
                 <button style={logginButtonStyle} onClick={() => setPage('login')}>login</button>
                 <button style={loggedInStyle} onClick={() => setPage('add')}>add book</button>
                 <button style={loggedInStyle} onClick={() => logout()}>logout</button>
-
             </div>
 
             {errorMessage &&
@@ -179,6 +189,13 @@ const App = () => {
                 login={login}
                 setToken={setToken}
                 setPage={setPage}
+            />
+
+            <Recommended
+                show={page === 'recommended'}
+                byGenre={BOOKS_BY_GENRE}
+                user={currentUser}
+                result={books}
             />
 
         </div>

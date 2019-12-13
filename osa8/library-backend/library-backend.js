@@ -1,9 +1,16 @@
-const { ApolloServer, UserInputError, AuthenticationError, gql } = require('apollo-server')
+const {
+    ApolloServer,
+    UserInputError,
+    AuthenticationError,
+    gql,
+    PubSub,
+} = require('apollo-server')
 const mongoose = require('mongoose')
 const Book = require('./models/book')
 const Author = require('./models/author')
 const User = require('./models/user')
 const Genre = require('./models/genre')
+const pubsub = new PubSub()
 
 mongoose.set('useFindAndModify', false)
 mongoose.set('useUnifiedTopology', true)
@@ -89,6 +96,10 @@ const typeDefs = gql`
             name: String!
         ): Genre
     }
+
+    type Subscription {
+        bookAdded: Book!
+    }
 `
 const resolvers = {
     Query: {
@@ -125,7 +136,7 @@ const resolvers = {
             const currentUser = context.currentUser
             let book = {}
             let author = {}
-            
+
             if (!currentUser) {
                 throw new AuthenticationError('not authenticated')
             }
@@ -165,7 +176,8 @@ const resolvers = {
                     invalidArgs: args
                 })
             }
-
+            book = await Book.findOne({ title: args.title }).populate('author')
+            pubsub.publish('BOOK_ADDED', { bookAdded: book })
             return book
         },
         editAuthor: async (root, args, context) => {
@@ -213,7 +225,12 @@ const resolvers = {
 
             return { value: jwt.sign(userForToken, JWT_SECRET) }
         }
-    }
+    },
+    Subscription: {
+        bookAdded: {
+            subscribe: () => pubsub.asyncIterator(['BOOK_ADDED'])
+        }
+    },
 
 }
 
@@ -230,6 +247,7 @@ const server = new ApolloServer({
     }
 })
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
     console.log(`Server ready at ${url}`)
+    console.log(`Subscriptions ready at ${subscriptionsUrl}`)
 })

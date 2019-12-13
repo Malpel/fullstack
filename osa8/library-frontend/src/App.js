@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
-import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks'
+import { useQuery, useMutation, useSubscription, useApolloClient } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 import LoginForm from './components/LoginForm'
 import Recommended from './components/Recommended'
@@ -18,19 +18,27 @@ const ALL_AUTHORS = gql`
   }
 `
 
+const BOOK_DETAILS = gql`
+fragment BookDetails on Book {
+    id
+    title
+    published 
+    author {
+        name
+        born
+        bookCount
+        id
+    }
+    genres
+}
+`
 const ALL_BOOKS = gql`
   {
-      allBooks {
-          title
-          published
-          author {
-              name
-          }
-          genres
-          id
-      }
+      allBooks { ...BookDetails }
   }
+  ${BOOK_DETAILS}
 `
+
 
 const ADD_BOOK = gql`
   mutation addBook($title:String!, $published:Int!, $author:String!, $genres:[String!]) {
@@ -40,12 +48,10 @@ const ADD_BOOK = gql`
           author: $author,
           genres: $genres
       ) {
-          title
-          published
-          genres
-          id
+            ...BookDetails
       }
   }
+  ${BOOK_DETAILS}
 `
 
 const EDIT_AUTHOR = gql`
@@ -79,16 +85,9 @@ const ALL_GENRES = gql`
 `
 const BOOKS_BY_GENRE = gql`
 query allBooksByGenre($genre: String!) {
-    allBooks(genre: $genre) {
-    title
-    published
-    author {
-        name
+    allBooks(genre: $genre) { ...BookDetails }
     }
-    genres
-    id
-    }
-}
+    ${BOOK_DETAILS}
 `
 
 const CURRENT_USER = gql`
@@ -97,6 +96,15 @@ const CURRENT_USER = gql`
             favoriteGenre
         }
     }
+`
+
+const BOOK_ADDED = gql`
+    subscription {
+        bookAdded {
+            ...BookDetails
+        }
+    }
+    ${BOOK_DETAILS}
 `
 
 const App = () => {
@@ -119,16 +127,45 @@ const App = () => {
     }, [])
 
     const handleError = (error) => {
-        console.log('ERRA', error)
         setErrorMessage(error.graphQLErrors[0].message)
         setTimeout(() => {
             setErrorMessage(null)
         }, 10000)
     }
 
+    const updateCacheWith = (addedBook) => {
+        const includedIn = (set, object) =>
+            set.map(p => p.id).includes(object.id)
+
+        const dataInStore = client.readQuery({ query: ALL_BOOKS })
+        if (!includedIn(dataInStore.allBooks, addedBook)) {
+            client.writeQuery({
+                query: ALL_BOOKS,
+                data: { allBooks: dataInStore.allBooks.concat(addedBook) }
+            })
+        }
+
+        const authorsInStore = client.readQuery({ query: ALL_AUTHORS })
+        if (!includedIn(authorsInStore.allAuthors, addedBook.author)) {
+            client.writeQuery({
+                query: ALL_AUTHORS,
+                data: { allAuthors: authorsInStore.allAuthors.concat(addedBook.author) }
+            })
+        }
+    }
+
+    useSubscription(BOOK_ADDED, {
+        onSubscriptionData: ({ subscriptionData }) => {
+            const addedBook = subscriptionData.data.bookAdded
+            updateCacheWith(addedBook)
+            alert(`${addedBook.title} added`)
+        }
+    })
+
+
     const [addBook] = useMutation(ADD_BOOK, {
         onError: handleError,
-        refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_GENRES }]
+        refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }, { query: ALL_GENRES }]
     })
 
     const [editAuthor] = useMutation(EDIT_AUTHOR, {

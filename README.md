@@ -1,5 +1,7 @@
 # Fullstack 2019
 
+https://fullstackopen.com/
+
 ## Osa 0: [Web-sovelluksen toimintaperiaatteita](https://github.com/Malpel/fullstack/blob/master/osa0/osa0.md)
 
 ## Osa 1: [Reactin perusteet](https://github.com/Malpel/fullstack/tree/master/osa1)

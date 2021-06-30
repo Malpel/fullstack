@@ -29,34 +29,60 @@ const parseArgs = (args: string[]): Result => {
         ratingDescription: rated.descr,
         target,
         average
-    }
-}
+    };
+};
 
-const calculateTraining = (args: string[]) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const calculateTraining = (args: any[]) => {
     let trainings = 0;
-    let hoursTrained = 0;
+    let hoursTrained = 0; 
 
-    for (let i = 3; i < args.length; i++) {
+    // i needs to be set to 3 if you want to use the original command line version
+    for (let i = 0; i < args.length; i++) {
         if (!isNaN(Number(args[i]))) {
             if (Number(args[i]) > 0) {
                 trainings++;
                 hoursTrained += Number(args[i]);
             }
-        } else throw new Error(`${args[i]} is not a number`);
+        } else throw new Error(`Malformatted parameters`);
         
     }
 
     return {trainingDays: trainings, hoursTrained};
-}
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const exerciseCalculator = (daily_exercises: any[], target: any) => {
+    if (daily_exercises == null || target == null) throw new Error('Parameters missing');
+    if (isNaN(Number(target))) throw new Error('Malformatted parameters');
+    if (Number(target) <= 0) throw new Error('Target must be greater than 0 (zero)');
+
+    const training = calculateTraining(daily_exercises);
+    
+    const average = training.hoursTrained / daily_exercises.length;
+    const success = target < average;
+
+    const rated = rate(target, average);
+
+    return {
+        periodLength: daily_exercises.length,
+        trainingDays: training.trainingDays,
+        success,
+        rating: rated.rating,
+        ratingDescription: rated.descr,
+        target,
+        average
+    };
+};
 
 const rate = (target: number, average: number) => {
     if (average / target >= 0.9) return { rating: 3, descr: "Well done, keep it up!" };
     else if (average / target >= 0.75) return { rating: 2, descr: "Good job!" };
-    else if (average / target >= 0.5) return { rating: 1, descr: "Better than nothing!" };
-}
+    else return { rating: 1, descr: "Better than nothing!" };
+};
 
 try {
     console.log(parseArgs(process.argv));
 } catch(e) {
-    console.log('Error, something went wrong: ', e.message)
+    console.log('Error, something went wrong: ', e.message);
 }

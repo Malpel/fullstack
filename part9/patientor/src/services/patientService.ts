@@ -1,11 +1,11 @@
 import patients from '../../data/patients';
-import { Patient, SsnOmmittedPatient } from '../types';
+import { Patient, SsnOmittedPatient } from '../types';
 
 const getPatients = (): Patient[] => {
     return patients;
 };
 
-const getSsnOmmitedPatients = (): SsnOmmittedPatient[] => {
+const getSsnOmittedPatients = (): SsnOmittedPatient[] => {
     return patients.map(({ id, name, dateOfBirth, gender, occupation }) => ({
         id,
         name,
@@ -17,5 +17,5 @@ const getSsnOmmitedPatients = (): SsnOmmittedPatient[] => {
 
 export default {
     getPatients,
-    getSsnOmmitedPatients
+    getSsnOmittedPatients
 };

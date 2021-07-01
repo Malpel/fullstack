@@ -13,4 +13,4 @@ export type Patient = {
     occupation: string;
 };
 
-export type SsnOmmittedPatient = Omit<Patient, 'ssn'>;
+export type SsnOmittedPatient = Omit<Patient, 'ssn'>;

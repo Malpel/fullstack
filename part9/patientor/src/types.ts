@@ -14,3 +14,11 @@ export type Patient = {
 };
 
 export type SsnOmittedPatient = Omit<Patient, 'ssn'>;
+
+export type newPatient = Omit<Patient, 'id'>;
+
+export enum Gender {
+    Male = 'male',
+    Female = 'female',
+    Other = 'other'
+}

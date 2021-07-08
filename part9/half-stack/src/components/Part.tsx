@@ -5,36 +5,48 @@ const Part = ({ courseParts }: { courseParts: CoursePart[] }) => {
   const parts: JSX.Element[] = [];
 
   courseParts.forEach(part => {
-    switch (part.name) {
+    switch (part.type) {
       
-      case "Fundamentals":
+      case "normal":
         parts.push(
           <div>
-            <p>{part.description} {part.exerciseCount}</p>
+            <p><b>{part.name} {part.exerciseCount}</b>
+            <br/>
+            <em>{part.description}</em></p>
           </div>
         )
         break;
 
-      case "Using props to pass data":
+      case "groupProject":
         parts.push(
           <div>
-            <p>{part.name} {part.exerciseCount}</p>
+            <p><b>{part.name} {part.exerciseCount} </b> 
+            <br/>
+            project exercises: {part.groupProjectCount}</p>
           </div>
         )
         break;
 
-      case "Advanced":
+      case "submission":
         parts.push(
           <div>
-            <p>{part.name} {part.exerciseCount}</p>
+            <p><b>{part.name} {part.exerciseCount}</b>
+            <br/>
+            <em>{part.description}</em>
+            <br/>
+            {part.exerciseSubmissionLink}</p>
           </div>
         )
         break;
 
-      case "Deeper type usage":
+      case "special":
         parts.push(
           <div>
-            <p>{part.name} {part.exerciseCount}</p>
+            <p><b>{part.name} {part.exerciseCount}</b>
+            <br/>
+            <em>{part.description}</em>
+            <br/>
+            Required skills: {part.requirements.map((r) => `${r} `)}</p>
           </div>
         )
         break;

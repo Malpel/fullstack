@@ -10,16 +10,15 @@ interface CoursePartBase {
   type: string;
 }
 
-interface CourseNormalPart extends CoursePartBase {
+interface CourseNormalPart extends CourseDescriptionPart {
   type: "normal";
 }
-
 interface CourseProjectPart extends CoursePartBase {
   type: "groupProject";
   groupProjectCount: number;
 }
 
-interface CourseSubmissionPart extends CoursePartBase {
+interface CourseSubmissionPart extends CourseDescriptionPart {
   type: "submission";
   exerciseSubmissionLink: string;
 }
@@ -28,7 +27,12 @@ interface CourseDescriptionPart extends CoursePartBase {
   description: string;
 }
 
-export type CoursePart = CourseNormalPart | CourseProjectPart | CourseSubmissionPart | CourseDescriptionPart;
+interface CourseRequirementsPart extends CourseDescriptionPart {
+  requirements: string[];
+  type: "special";
+}
+
+export type CoursePart = CourseNormalPart | CourseProjectPart | CourseSubmissionPart | CourseRequirementsPart;
 
 
 const App = () => {
@@ -63,6 +67,14 @@ const App = () => {
       description: "Confusing description",
       exerciseSubmissionLink: "https://fake-exercise-submit.made-up-url.dev",
       type: "submission"
+    },
+
+    {
+      name: "Backend development",
+      exerciseCount: 21,
+      description: "Typing the backend",
+      requirements: ["nodejs", "jest"],
+      type: "special"
     }
   ]
 

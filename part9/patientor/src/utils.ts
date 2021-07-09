@@ -1,8 +1,8 @@
-import { Gender, newPatient } from "./types";
+import { Gender, newPatient, Entry, EntryWithoutId } from "./types";
 
 type Fields = { name: unknown, dateOfBirth: unknown, ssn: unknown, gender: unknown, occupation: unknown };
 
-const toNewPatient = ({ name, dateOfBirth, ssn, gender, occupation }: Fields): newPatient => {
+export const toNewPatient = ({ name, dateOfBirth, ssn, gender, occupation }: Fields): newPatient => {
   const patient: newPatient = {
     name: parseString(name),
     dateOfBirth: parseDateOfBirth(dateOfBirth),
@@ -14,8 +14,6 @@ const toNewPatient = ({ name, dateOfBirth, ssn, gender, occupation }: Fields): n
 
   return patient;
 };
-
-export default toNewPatient;
 
 const isString = (text: unknown): text is string => {
   return typeof text === 'string';
@@ -52,4 +50,46 @@ const parseGender = (gender: unknown): Gender => {
   }
 
   return gender;
+};
+
+// Could not get anything else working
+export const toNewEntry = (entry: Entry): EntryWithoutId => {
+  switch (entry.type) {
+    case "HealthCheck":
+      const healthCheckEntry: EntryWithoutId = {
+        description: parseString(entry.description),
+        date: parseDateOfBirth(entry.date),
+        specialist: parseString(entry.specialist),
+        diagnosisCodes: entry.diagnosisCodes,
+        type: entry.type,
+        healthCheckRating: entry.healthCheckRating
+      }
+
+      return healthCheckEntry;
+
+    case "Hospital":
+      const hospitalEntry: EntryWithoutId = {
+        description: parseString(entry.description),
+        date: parseDateOfBirth(entry.date),
+        specialist: parseString(entry.specialist),
+        diagnosisCodes: entry.diagnosisCodes,
+        type: entry.type,
+        discharge: entry.discharge
+      }
+
+      return hospitalEntry;
+
+    default:
+      const nentry: EntryWithoutId = {
+        description: parseString(entry.description),
+        date: parseDateOfBirth(entry.date),
+        specialist: parseString(entry.specialist),
+        diagnosisCodes: entry.diagnosisCodes,
+        type: entry.type,
+        employerName: entry.employerName,
+        sickLeave: entry.sickLeave
+      }
+
+      return nentry
+  }
 };

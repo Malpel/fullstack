@@ -39,3 +39,7 @@ username: generic_username
 password: salis123
 
 ## osa 8: [GraphQL](https://github.com/Malpel/fullstack/tree/master/osa8)
+
+## part 9: [Typescript](https://github.com/Malpel/fullstack/tree/master/part9)
+
+* [Patientor frontend](https://github.com/Malpel/patientor)
